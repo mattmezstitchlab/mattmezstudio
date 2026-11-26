@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Matt Mez — Creative Studio",
+      "hasCanvas": false,
+      "bodyTextLen": 492,
+      "bodyTextHash": "0e6b252abe3eb4fec2455b2e22234437ef333dba74ee9f8c1ac34f07c29ad6cf",
+      "bodyTextPrefix": "Aller au contenu MATT MEZ — Creative Studio MM© STUDIO FR / EN ©",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Matt Mez — Creative Studio",
+      "hasCanvas": false,
+      "bodyTextLen": 462,
+      "bodyTextHash": "62ba433de94209948af18c5d9c7da8ca553c4286d9261a1b8f2f2e326d886e3f",
+      "bodyTextPrefix": "Aller au contenu MATT MEZ — Creative Studio MM© STUDIO FR / EN ©",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
