@@ -134,6 +134,7 @@ export function LabPage() {
             <div className="caption"><b>Cadence</b><span>Outil</span></div>
           </Link>
         </div>
+        <ChromaTool />
         <p className="note">{ui(locale).demoLine}</p>
       </section>
     </div>
@@ -363,5 +364,64 @@ export function CadenceTool() {
         <button type="button" className="quiet on" onClick={() => setPlaying((value) => !value)}>{playing ? "Stop" : "Jouer"}</button>
       </section>
     </div>
+  );
+}
+
+/** Local-only generative poster workshop; no network or animation loop. */
+function ChromaTool() {
+  const [headline, setHeadline] = useState("CHROMA");
+  const [palette, setPalette] = useState(0);
+  const [seed, setSeed] = useState(1);
+  const [layout, setLayout] = useState("orbit");
+  const svg = useRef<SVGSVGElement>(null);
+  const { locale } = useStudio();
+  const en = locale === "en";
+  const colors = [["#f5ebda","#e94b35","#171717"],["#141426","#b9f53c","#f8f7f1"],["#ffcae5","#6246ea","#201333"],["#183e38","#ffb657","#fff3d8"]][palette];
+  const random = (i: number) => {
+    const n = Math.sin(seed * 127.1 + i * 311.7) * 43758.5453;
+    return n - Math.floor(n);
+  };
+  const download = () => {
+    if (!svg.current) return;
+    const data = new XMLSerializer().serializeToString(svg.current);
+    const url = URL.createObjectURL(new Blob([data], { type: "image/svg+xml;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chroma-poster.svg";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  return (
+    <section id="chroma" aria-labelledby="chroma-title" style={{ marginTop: 64, borderTop: "1px solid currentColor", paddingTop: 24 }}>
+      <p className="note">{en ? "Experiment 03 · Generative design" : "Expérience 03 · Design génératif"}</p>
+      <h2 id="chroma-title" className="monument" style={{ fontSize: "clamp(2.5rem, 10vw, 6rem)" }}>CHROMA</h2>
+      <p>{en ? "Compose your own poster. No account required." : "Composez votre propre affiche. Aucun compte nécessaire."}</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 24, alignItems: "start" }}>
+        <svg ref={svg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label={en ? "Generated poster" : "Affiche générée"} style={{ width: "100%", height: "auto", display: "block" }}>
+          <rect width="600" height="800" fill={colors[0]} />
+          {Array.from({ length: 12 }, (_, i) => {
+            const x = 80 + random(i * 3) * 440;
+            const y = 220 + random(i * 3 + 1) * 400;
+            const r = 24 + random(i * 3 + 2) * 100;
+            return layout === "orbit"
+              ? <circle key={i} cx={x} cy={y} r={r} fill={i % 3 === 0 ? colors[2] : colors[1]} opacity={0.7} />
+              : <rect key={i} x={x-r/2} y={y-r/2} width={r*1.4} height={r*1.4} fill={i % 3 === 0 ? colors[2] : colors[1]} transform={`rotate(${random(i+50)*180} ${x} ${y})`} opacity={0.8} />;
+          })}
+          <text x="32" y="55" fill={colors[2]} fontFamily="sans-serif" fontSize="18" letterSpacing="3">CREATIVE STUDIO / 03</text>
+          <text x="30" y="145" fill={colors[2]} fontFamily="sans-serif" fontWeight="900" fontSize={Math.min(92, 850 / Math.max(headline.length, 1))}>{headline || "CHROMA"}</text>
+          <text x="32" y="760" fill={colors[2]} fontFamily="sans-serif" fontSize="20" letterSpacing="2">FORM / COLOR / {String(seed).padStart(3,"0")}</text>
+        </svg>
+        <div style={{ display: "grid", gap: 16 }}>
+          <label className="field">{en ? "Headline" : "Titre"}<input value={headline} maxLength={20} onChange={(e) => setHeadline(e.target.value)} /></label>
+          <label className="field">{en ? "Palette" : "Palette"}<select value={palette} onChange={(e) => setPalette(Number(e.target.value))}><option value="0">Terracotta</option><option value="1">Acid</option><option value="2">Bloom</option><option value="3">Forest</option></select></label>
+          <label className="field">{en ? "Composition" : "Composition"}<select value={layout} onChange={(e) => setLayout(e.target.value)}><option value="orbit">Orbit</option><option value="grid">Fragment</option></select></label>
+          <button type="button" className="quiet" onClick={() => setSeed((n) => n + 1)}>{en ? "New variation" : "Nouvelle variation"}</button>
+          <button type="button" className="quiet on" onClick={download}>{en ? "Download SVG" : "Exporter en SVG"}</button>
+          <button type="button" className="quiet" onClick={() => { setHeadline("CHROMA"); setPalette(0); setSeed(1); setLayout("orbit"); }}>{en ? "Reset" : "Réinitialiser"}</button>
+        </div>
+      </div>
+    </section>
   );
 }
